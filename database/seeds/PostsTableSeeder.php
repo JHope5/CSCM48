@@ -21,7 +21,10 @@ class PostsTableSeeder extends Seeder
         $post->topics()->attach(2);
 
         factory(App\Post::class, 15)->create()->each(function($p) {
-            $p->topics()->sync(App\Topic::all()->random(2)); }); 
-        // from https://laracasts.com/discuss/channels/laravel/modelfactory-manytomany?page=1#reply=120747
+            $p->topics()->sync(App\Topic::all()->random(2)); });
+            /* 
+             * assigns 2 topics to each created post
+             * from https://laracasts.com/discuss/channels/laravel/modelfactory-manytomany?page=1#reply=120747
+             */
     }
 }
