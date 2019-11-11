@@ -54,7 +54,7 @@ class User extends Authenticatable
     /*
      *  Get user's additional contact information
      */
-    public function additional_contacts() {
+    public function additional_contact() {
         return $this->hasOne('App\AdditionalContact');
     }
 }
