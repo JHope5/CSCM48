@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@section('title', '- Login')
+
 @section('content')
 <br><br>
 <div class="container">

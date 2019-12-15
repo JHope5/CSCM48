@@ -1,8 +1,6 @@
 @extends('layouts.main')
 
-@section('title')
-<title>Home - Fakebook</title>
-@endsection
+@section('title', '- Home')
 
 @section('content')
 <div class="row">
