@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use App\User;
+use App\Topic;
 use Session;
 
 class PostController extends Controller
@@ -16,7 +18,9 @@ class PostController extends Controller
     public function index()
     {
         //
-        
+        $posts = Post::all();
+
+        return view('posts.index', ['posts' => $posts]);
     }
 
     /**
@@ -27,7 +31,8 @@ class PostController extends Controller
     public function create()
     {
         //
-        return view('posts.create');
+        $topics = Topic::all();
+        return view('posts.create', ['topics' => $topics]);
     }
 
     /**
@@ -39,10 +44,10 @@ class PostController extends Controller
     public function store(Request $request)
     {
         // Validate form data
-        $this->validate($request, array(
+        $validatedData = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required'
-        ));
+        ]);
 
         // Storing data in database
         $post = new Post;
@@ -66,9 +71,9 @@ class PostController extends Controller
     public function show($id)
     {
         //
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
 
-        return view('posts.show')->withPost($post);
+        return view('posts.show', ['post' => $post]);
     }
 
     /**
@@ -80,6 +85,8 @@ class PostController extends Controller
     public function edit($id)
     {
         //
+        $post = Post::findOrFail($id);
+        return view('posts.edit', ['post' => $post]);
     }
 
     /**
@@ -91,7 +98,21 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Validate form data
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required'
+        ]);
+
+        // Save changes to database
+        $post = Post::findOrFail($id);
+        $post->title = $request->input('title');
+        $post->content = $request->input('content');
+        $post->save();
+
+        Session::flash('success', 'Post Updated!');
+
+        return redirect()->route('posts.show', $post->id);
     }
 
     /**
@@ -103,5 +124,10 @@ class PostController extends Controller
     public function destroy($id)
     {
         //
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        return redirect()->route('posts.index')->with('message', 'Post 
+            Deleted.');
     }
 }

@@ -11,6 +11,6 @@ $factory->define(Post::class, function (Faker $faker) {
         //
         'user_id' => $faker->numberBetween(1, 10),
         'title' => $faker->text($faker->numberBetween(5, 20)),
-        'content' => $faker->text($faker->numberBetween(50, 200)),
+        'content' => $faker->text($faker->numberBetween(50, 600)),
     ];
 });

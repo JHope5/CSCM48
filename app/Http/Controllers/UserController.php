@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Post;
+use Session;
 
 class UserController extends Controller
 {
@@ -48,8 +51,8 @@ class UserController extends Controller
     public function show($id)
     {
         //
-        $user = User::findOrFail($id);
-        return view('users.show', ['user'=>$user]); 
+        $user = User::findorFail($id);
+        return view('users.show', ['user' =>$user ]); 
     }
 
     /**
