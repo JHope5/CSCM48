@@ -14,6 +14,11 @@
                 <li class="{{ Request::segment(1) === 'users' ? 'active' : null }}">
                     <a  class="nav-link" href="{{ url('/users') }}">Users</a>
                 </li>
+                @if(Auth::id() == 1)
+                <li class="{{ Request::segment(1) === 'topics' ? 'active' : null }}">
+                  <a class="nav-link" href="{{ url('/topics') }}">Topics</a>
+                </li>
+                @endif
 
             </ul>
             <ul class="navbar-nav ml-auto">

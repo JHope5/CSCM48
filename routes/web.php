@@ -15,19 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/*Route::get('/users', function() {
-    return view('users');
-});*/
-
-//Route::get('/users', 'UserController@index');
-
-//Route::get('/users/{id}', 'UserController@show');
-
-//Route::get('/users/{id}/posts', 'UserController@posts');
-
 Route::resource('/users', 'UserController');
 
 Route::resource('/posts', 'PostController');
+
+Route::resource('/topics', 'TopicController');
 
 Route::get('/contact', function() {
     return view('contact');

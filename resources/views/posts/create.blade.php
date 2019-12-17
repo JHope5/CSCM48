@@ -4,7 +4,7 @@
 
 @section('stylesheets')
 
-    {!! Html::style('css/parsley.css') !!} 
+    {!! Html::style('css/select2.min.css') !!}
 
 @endsection
 
@@ -51,13 +51,10 @@
                                 <label for="topics" class="col-md-4 col-form-label text-md-right">{{ __('Topics') }}</label>
         
                                 <div class="col-md-6">
-                                    <select id="topics" class="form-control" name="topics" autocomplete="current-topics">
-                                        @foreach ($topics as $topic)
-                                            <option value="{{ $topic->id }}"
-                                                @if ($topic->id == old('topic_id'))
-                                                    selected="selected"
-                                                @endif
-                                            >{{ $topic->name }}</option>
+                                    <select class="form-control select2" name="topics[]"
+                                        multiple="multiple">
+                                     @foreach ($topics as $topic)
+                                            <option value="{{ $topic->id }}">{{ $topic->name }}</option> 
                                         @endforeach
                                     </select>
                                 </div>
@@ -82,6 +79,10 @@
 
 @section('scripts')
 
-    {!! Html::script('js/parsley.min.js') !!}
+    {!! Html::script('js/select2.min.js') !!}
+
+    <script type="text/javascript">
+        $('.select2').select2();
+    </script>
 
 @endsection

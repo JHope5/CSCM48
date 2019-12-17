@@ -18,16 +18,24 @@
                     <div class="card-header">Post Information - #{{$post->id}}</div>
                     <div class="card-body">
                       <dl class="row">
-                          <dt class="col-sm-6">Posted By</dt>
-                          <dd class="col-sm-6"><a href="../users/{{$post->user_id}}">{{ User::find($post->user_id)->username }}</a></dd>
+                          <dt class="col-sm-5">Posted By</dt>
+                          <dd class="col-sm-7"><a href="../users/{{$post->user_id}}">{{ User::find($post->user_id)->username }}</a></dd>
                       </dl>
                       <dl class="row">
-                          <dt class="col-sm-6">Created At</dt>
-                          <dd class="col-sm-6">{{ date('F jS, Y H:i', strtotime($post->created_at)) }}</dd>
+                          <dt class="col-sm-5">Created At</dt>
+                          <dd class="col-sm-7">{{ date('F jS, Y H:i', strtotime($post->created_at)) }}</dd>
                       </dl>
                       <dl class="row">
-                            <dt class="col-sm-6">Last Updated</dt>
-                            <dd class="col-sm-6">{{ date('F jS, Y H:i', strtotime($post->updated_at)) }}</dd>
+                            <dt class="col-sm-5">Last Updated</dt>
+                            <dd class="col-sm-7">{{ date('F jS, Y H:i', strtotime($post->updated_at)) }}</dd>
+                        </dl>
+                        <dl class="row">
+                            <dt class="col-sm-5">Topics</dt>
+                            <dd class="col-sm-7">
+                                @foreach($post->topics as $topic)
+                                {{ $topic->name }}; 
+                                @endforeach
+                            </dd>
                         </dl>
                         
                         @if((Auth::id() == $post->user_id) || (Auth::id() == 1))

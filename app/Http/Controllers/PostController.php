@@ -61,6 +61,9 @@ class PostController extends Controller
         $post->user_id = Auth::id();
         $post->save();
 
+        // Attach topics after post has been saved
+        $post->topics()->sync($request->topics, false);
+
         Session::flash('success', 'Post created!');
 
         return redirect()->route('posts.show', $post->id);
@@ -91,7 +94,10 @@ class PostController extends Controller
     {
         //
         $post = Post::findOrFail($id);
-        return view('posts.edit', ['post' => $post]);
+        
+        $topics = Topic::pluck('name','id')->all();
+
+        return view('posts.edit', ['post' => $post, 'topics'=>$topics]);
     }
 
     /**
@@ -115,6 +121,9 @@ class PostController extends Controller
         $post->content = $request->input('content');
         $post->save();
 
+        $post->topics()->sync($request->topics, true);
+
+        //dd($post->topics);
         Session::flash('success', 'Post Updated!');
 
         return redirect()->route('posts.show', $post->id);
@@ -130,6 +139,7 @@ class PostController extends Controller
     {
         //
         $post = Post::findOrFail($id);
+        $post->topics()->detach(); // Removing associated topics; topics can't be linked to non-existent posts
         $post->delete();
 
         Session::flash('success', 'Post Deleted!');

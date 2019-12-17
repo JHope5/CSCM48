@@ -4,6 +4,12 @@
 
 @section('title', '- Edit Post')
 
+@section('stylesheets')
+
+{!! Html::style('css/select2.min.css') !!}
+
+@endsection
+
 @section('content')
 
 <div class="row">
@@ -18,6 +24,9 @@
             <br>
             {{ Form::label('content', "Content:") }}
             {{ Form::textarea('content', null, ['class' => 'form-control']) }}
+            <br>
+            {{ Form::label('topics', 'Topics:') }}
+            {{ Form::select('topics[]', $topics, null, ['class' => 'form-control select2', 'multiple' => 'multiple']) }}    
         </div>
     </div>
     <div class="col-md-4">
@@ -50,5 +59,17 @@
                   </div>
     </div>
 </div>
+
+@endsection
+
+@section('scripts')
+
+{!! Html::script('js/select2.min.js') !!}
+
+<script>
+    $('.select2').select2();
+    $('.select2').select2().val({!! json_encode($post->topics()
+        ->allRelatedIds()) !!}).trigger('change');
+</script>
 
 @endsection
