@@ -42,7 +42,7 @@
                               {{ Form::submit('Save Changes', ['class' => 'btn btn-success btn-block']) }}
                           </div>
                           <div class="col-sm-5">
-                              {!! Html::linkRoute('posts.edit', 'Cancel', array($post->id), array('class' =>'btn btn-danger btn-block')) !!}
+                              {!! Html::linkRoute('posts.show', 'Cancel', array($post->id), array('class' =>'btn btn-danger btn-block')) !!}
                           </div>
                           </div>
                       </div>

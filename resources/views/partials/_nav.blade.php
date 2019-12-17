@@ -1,3 +1,5 @@
+<? use App\User; ?>
+
 <!-- Navbar css -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Fakebook</a>
@@ -6,22 +8,15 @@
         </button>
         <div id="navbarNavDropdown" class="navbar-collapse collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/posts">Posts</span></a>
+                <li class="{{ Request::segment(1) === 'posts' ? 'active' : null }}">
+                    <a class="nav-link" href="{{ url('/posts') }}">Posts</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/contact">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/users">Users</a>
+                <li class="{{ Request::segment(1) === 'users' ? 'active' : null }}">
+                    <a  class="nav-link" href="{{ url('/users') }}">Users</a>
                 </li>
 
             </ul>
             <ul class="navbar-nav ml-auto">
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
             @guest
               <li class="nav-item">
                 <a class="nav-link" style="color:white" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -39,6 +34,7 @@
                   </a>
 
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('users.show', Auth::id()) }}">My Profile</a>
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                        document.getElementById('logout-form').submit();">{{ __('Logout') }}
                     </a>

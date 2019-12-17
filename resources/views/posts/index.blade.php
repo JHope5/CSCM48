@@ -1,4 +1,4 @@
-<?php use App\User; ?>
+<?php use App\User; use App\Comment; ?>
 
 @extends('layouts.main')
 
@@ -26,6 +26,7 @@
                     <th>Title</th>
                     <th>Content</th>
                     <th>Created At</th>
+                    <th>Comments</th>
                     <th></th>
                 </thead>
 
@@ -36,13 +37,19 @@
                             <th>{{ User::find($post->user_id)->username }} </th>
                             <td>{{$post->title}}</td>
                             <td>{{substr($post->content, 0, 50)}} <br> {{ strlen($post->content) > 50 ? Html::linkRoute('posts.show', 'Read More...', array($post->id)) : "" }}</td>
-                            <td>{{$post->created_at}}</td>
+                            <td>{{ date('jS M, Y H:i', strtotime($post->created_at)) }}</td>
+                            <td>{{ Comment::get()->where('post_id', $post->id)->count() }}</td>
                             <td><a href="{{ route('posts.show', $post->id) }}" class="btn btn-default btn-sm">View</a>
+                                @if((Auth::id() == $post->user_id) || (Auth::id() == 1))
                                 <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-default btn-sm">Edit</a>
+                                @endif
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            <div class="pagination">
+                {!! $posts->links(); !!}
+            </div>
         </div>
     </div>
 

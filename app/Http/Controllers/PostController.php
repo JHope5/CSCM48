@@ -6,10 +6,15 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\User;
 use App\Topic;
+use Auth;
 use Session;
 
 class PostController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +23,7 @@ class PostController extends Controller
     public function index()
     {
         //
-        $posts = Post::all();
+        $posts = Post::orderBy('id', 'desc')->paginate(10);
 
         return view('posts.index', ['posts' => $posts]);
     }
@@ -53,7 +58,7 @@ class PostController extends Controller
         $post = new Post;
         $post->title = $request->title;
         $post->content = $request->content;
-        $post->user_id = 3;
+        $post->user_id = Auth::id();
         $post->save();
 
         Session::flash('success', 'Post created!');
@@ -127,7 +132,8 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->delete();
 
-        return redirect()->route('posts.index')->with('message', 'Post 
-            Deleted.');
+        Session::flash('success', 'Post Deleted!');
+
+        return redirect()->route('posts.index');
     }
 }

@@ -34,8 +34,7 @@
                             <td>{{ Post::get()->where('user_id', $user->id)->count() }}</td>
                             <td>{{ Comment::get()->where('user_id', $user->id)->count() }}</td>
                             <td>{{$user->created_at}}</td>
-                            <td><a href="{{ route('users.show', $user->id) }}" class="btn btn-default btn-sm">View</a>
-                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-default btn-sm">Edit</a>
+                            <td><a href="{{ route('users.show', $user->id) }}" class="btn btn-default btn-sm">View</a></td>
                         </tr>
                     @endforeach
                 </tbody>
