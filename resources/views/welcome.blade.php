@@ -1,4 +1,5 @@
-<?php use App\Post; ?>
+<?php use App\Post;
+      use App\User; ?>
 
 @extends('layouts.main')
 
@@ -9,7 +10,7 @@
   <div class="col-md-12">
     <div class="jumbotron">
       <h1>Fakebook!</h1>
-      <p class="lead">Welcome to the fakebook multi-user blog, enjoy the posts!</p>
+      <p class="lead">Welcome to the Fakebook multi-user blog, enjoy the posts!</p>
       <p><a class="btn btn-primary btn-lg" href="{{ route('posts.index') }}" role="button">View All Posts</a></p>
     </div>
   </div>
@@ -20,7 +21,7 @@
       <div class="post">
         <h2>Random Post</h2>
         <?php $post = Post::get()->random(); ?>
-        <h3>{{ $post->title }}</h3>
+        <h3>{{ $post->title }} <small>by <a href="users/{{User::find($post->user_id)->id}}">{{User::find($post->user_id)->username}}</a></small></h3>
         <p>{{ substr($post->content, 0, 200) }}...</p>
         <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary">Read More</a>
       </div>

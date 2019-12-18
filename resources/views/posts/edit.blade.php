@@ -17,7 +17,7 @@
 
         <!-- Helped with Laravel Collective
                 https://laravelcollective.com/docs/6.0/html -->
-        {!! Form::model($post, ['route' => ['posts.update', $post->id], 'method' => 'PUT']) !!}
+        {!! Form::model($post, ['route' => ['posts.update', $post->id], 'method' => 'PUT', 'files' => true]) !!}
         <div class="col-md-8">
             {{ Form::label('title', 'Title:') }}
             {{ Form::text('title', null, ['class' => 'form-control input-lg']) }}
@@ -26,7 +26,10 @@
             {{ Form::textarea('content', null, ['class' => 'form-control']) }}
             <br>
             {{ Form::label('topics', 'Topics:') }}
-            {{ Form::select('topics[]', $topics, null, ['class' => 'form-control select2', 'multiple' => 'multiple']) }}    
+            {{ Form::select('topics[]', $topics, null, ['class' => 'form-control select2', 'multiple' => 'multiple']) }} 
+            <br>
+            {{ Form::label('image', 'Attach Image:', ['class' => 'form-control']) }}
+            {{ Form::file('image')}}
         </div>
     </div>
     <div class="col-md-4">
@@ -72,4 +75,4 @@
         ->allRelatedIds()) !!}).trigger('change');
 </script>
 
-@endsection
+@endsection 

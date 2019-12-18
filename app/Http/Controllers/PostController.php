@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\User;
 use App\Topic;
+use App\Comment;
 use Auth;
+use Image;
+use Storage;
 use Session;
 
 class PostController extends Controller
@@ -22,9 +25,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        // Most recent posts appear at the top, 10 per page
         $posts = Post::orderBy('id', 'desc')->paginate(10);
-
         return view('posts.index', ['posts' => $posts]);
     }
 
@@ -35,7 +37,6 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
         $topics = Topic::all();
         return view('posts.create', ['topics' => $topics]);
     }
@@ -59,13 +60,22 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->content = $request->content;
         $post->user_id = Auth::id();
+
+        // Checks if a file has been attached and saves it if so
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $fileName = $post->id . '.' . $image->getClientOriginalExtension();
+            $location = public_path('img/' . $fileName);
+            Image::make($image)->resize(500, 400)->save($location);
+            $post->image = $fileName;
+        }
+
         $post->save();
 
         // Attach topics after post has been saved
         $post->topics()->sync($request->topics, false);
 
         Session::flash('success', 'Post created!');
-
         return redirect()->route('posts.show', $post->id);
 
     }
@@ -78,9 +88,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
         $post = Post::findOrFail($id);
-
         return view('posts.show', ['post' => $post]);
     }
 
@@ -92,11 +100,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
         $post = Post::findOrFail($id);
-        
         $topics = Topic::pluck('name','id')->all();
-
         return view('posts.edit', ['post' => $post, 'topics'=>$topics]);
     }
 
@@ -119,6 +124,18 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->title = $request->input('title');
         $post->content = $request->input('content');
+
+        // Checks if a file has been attached
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $fileName = $post->id . '.' . $image->getClientOriginalExtension();
+            $location = public_path('img/' . $fileName);
+            Image::make($image)->resize(500, 400)->save($location);
+            $oldFileName = $post->image;
+            $post->image = $fileName;
+            Storage::delete($oldFileName);
+        }
+
         $post->save();
 
         $post->topics()->sync($request->topics, true);
@@ -140,10 +157,27 @@ class PostController extends Controller
         //
         $post = Post::findOrFail($id);
         $post->topics()->detach(); // Removing associated topics; topics can't be linked to non-existent posts
+        Storage::delete($post->image);
         $post->delete();
 
         Session::flash('success', 'Post Deleted!');
 
         return redirect()->route('posts.index');
+    }
+
+    public function comment(Request $request, $post_id) {
+        $this->validate($request, [
+            'content' => 'required'
+        ]);
+        $post = Post::findOrFail($post_id);
+
+        $comment = new Comment;
+        $comment->content = $request->input('content');
+        $comment->user_id = Auth::id();
+        $comment->post_id = $post->id;
+        $comment->save();
+
+        Session::flash('success', 'Comment added!');
+        return redirect()->route('posts.show', $post->id);
     }
 }

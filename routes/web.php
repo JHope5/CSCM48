@@ -21,11 +21,8 @@ Route::resource('/posts', 'PostController');
 
 Route::resource('/topics', 'TopicController');
 
-Route::get('/contact', function() {
-    return view('contact');
-});
+Route::post('/comment/{id}', 'PostController@comment');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
